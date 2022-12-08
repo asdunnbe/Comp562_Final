@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 import torch.optim as optim
 import matplotlib.pyplot as plt
 import argparse
+import csv
 
 from utils import ImageDataset
 from model import ResNet50, train, val, test
@@ -13,10 +14,9 @@ from model import ResNet50, train, val, test
 source_folder = "/data/Chest_XRay/"
 train_img = "/data/Chest_XRay/img_train/"
 test_img = "/data/Chest_XRay/img_test/"
-test_csv = "/data/Chest_XRay/Data_test_sing.csv"
-train_csv = "/data/Chest_XRay/Data_train_sing.csv"
-
-
+test_csv = "/data/Chest_XRay/Data_test_sing.csv"       # balenced or unbalenced(sing)
+train_csv = "/data/Chest_XRay/Data_train_sing.csv"     # balenced or unbalenced(sing)
+save_results_location = "/home/tasos/ad122/base_lines/"
 
 def main(args):
     # ------ DATA
@@ -72,6 +72,7 @@ def main(args):
     if args.lr_sched == 'exp': scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer)
 
     # start the training and validation
+    epoch_counts = []
     train_loss = []
     valid_loss = []
     f1_list = []
@@ -84,6 +85,7 @@ def main(args):
         if args.lr_sched is not 'none': scheduler.step()
         f1, auc = test(model, test_loader, device)
 
+        epoch_counts.append(epoch)
         train_loss.append(train_epoch_loss)
         valid_loss.append(valid_epoch_loss)
         f1_list.append(f1)
@@ -93,13 +95,23 @@ def main(args):
         print(f'F1:         {f1:.4f}      AUC:      {auc:.4f}')
 
 
+    # add results to csv
+    header = ['epoch', 'train loss', 'valid loss', 'f1', 'auc']
+    rows = zip(epoch_counts, train_loss, valid_loss, f1_list, auc_list)
+    with open(save_results_location + args.exp_name + '.csv', "w") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for row in rows:
+            writer.writerow(row)
+
+
     # save the trained model to disk
     torch.save({
                 'epoch': epochs,
                 'model_state_dict': model.state_dict(),
                 'optimizer_state_dict': optimizer.state_dict(),
                 'loss': criterion,
-                }, '/home/tasos/ad122/base_lines/' + args.exp_name + '.pth')
+                }, save_results_location + args.exp_name + '.pth')
 
     # plot and save the train and validation line graphs
     plt.figure(figsize=(10, 7))
@@ -108,17 +120,17 @@ def main(args):
     plt.xlabel('Epochs')
     plt.ylabel('Loss')
     plt.legend()
-    plt.savefig('/home/tasos/ad122/base_lines/' + args.exp_name +'_loss.png')
+    plt.savefig(save_results_location + args.exp_name +'_loss.png')
     plt.show()
 
     # plot and save the train and validation line graphs
     plt.figure(figsize=(10, 7))
-    plt.plot(f1_list, color='orange', label='train loss')
-    plt.plot(auc_list, color='red', label='validataion loss')
+    plt.plot(f1_list, color='orange', label='f1')
+    plt.plot(auc_list, color='red', label='auc')
     plt.xlabel('Epochs')
     plt.ylabel('AUC and F1')
     plt.legend()
-    plt.savefig('/home/tasos/ad122/base_lines/' + args.exp_name +'_testing.png')
+    plt.savefig(save_results_location + args.exp_name +'_testing.png')
     plt.show()
 
 

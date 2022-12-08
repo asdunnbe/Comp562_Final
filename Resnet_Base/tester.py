@@ -7,12 +7,12 @@ import pickle
 
 BASE_TEST_NAME = f'base_resnet50'
 
-epochs = [5, 10, 20, 30]
-lrs = [0.001, 0.0001, 0.00001]
+epochs = [50]
+lrs = [0.001, 0.00001]
 batch_size = 128
 pretrain = False
-optimizers = ['adam', 'sgd']
-lr_scheds = ['cosine', 'multi', 'linear', 'exp']
+optimizers = ['adam']
+lr_scheds = ['cosine']
 verbose = [False]
 
 results = {}
