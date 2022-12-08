@@ -3,6 +3,7 @@ import torch.nn as nn
 from torchvision import models as models
 from tqdm import tqdm
 from sklearn.metrics import f1_score, roc_auc_score
+import numpy as np
 
 from utils import label_dict
 
@@ -64,12 +65,11 @@ def val(model, dataloader, criterion, val_data, device):
 
         return val_loss
 
-def test(model, dataloader, device):
+def test(model, dataloader, device, threshold):
     print('Testing')
     model.eval()
     y_true = []
     y_pred = []
-    #print(type(y_pred))
 
     with torch.no_grad():
         for i, batch in tqdm(enumerate(dataloader)):
@@ -80,10 +80,11 @@ def test(model, dataloader, device):
             for l in y_p: 
                 l = torch.sigmoid(l)
                 y_pred.append(l.tolist())
-                #print("After", type(y_pred))
-            #y_pred = model(data)
 
-    f1 = f1_score(y_true, y_pred, zero_division=1, average=None)
-    auc = roc_auc_score(y_true, y_pred, average=None)
+    for row in y_pred:
+        row = [int(i > threshold) for i in row]
+
+    f1 = f1_score(y_true, y_pred, zero_division=1, average="macro")
+    auc = roc_auc_score(y_true, y_pred, average='macro')
     
     return f1, auc

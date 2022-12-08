@@ -14,9 +14,9 @@ from model import ResNet50, train, val, test
 source_folder = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/"
 train_img = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/img_train/"
 test_img = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/img_test/"
-test_csv = "/Users/User/Github Repositeries/Comp562_Final/data organization/Data_test_sing.csv"       # balenced or unbalenced(sing)
-train_csv = "/Users/User/Github Repositeries/Comp562_Final/data organization//Data_train_sing.csv"     # balenced or unbalenced(sing)
-save_results_location = "/Users/User/Github Repositeries/Comp562_Final/results"
+test_csv = "/Users/User/Github Repositeries/Comp562_Final/data organization/Data_test_bal.csv"       # balenced or unbalenced(sing)
+train_csv = "/Users/User/Github Repositeries/Comp562_Final/data organization/Data_train_bal.csv"     # balenced or unbalenced(sing)
+save_results_location = "/Users/User/Github Repositeries/Comp562_Final/results/"
 
 def main(args):
     # ------ DATA
@@ -44,10 +44,10 @@ def main(args):
     # data loaders
     batch_size = args.batch_size
 
-    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=8)
-    val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=8)
+    train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=4)
+    val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=4)
     #test_loader = DataLoader(test_data, batch_size=len(test_data), shuffle=False, num_workers=8)
-    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=8)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=4)
     # ------ MODEL
 
     print('==> Building model..')
@@ -84,7 +84,7 @@ def main(args):
         train_epoch_loss = train(model, train_loader, optimizer, criterion, train_data, device)
         valid_epoch_loss = val(model, val_loader, criterion, val_data, device)
         if args.lr_sched != 'none': scheduler.step()
-        f1, auc = test(model, test_loader, device)
+        f1, auc = test(model, test_loader, device, args.threshold)
 
         epoch_counts.append(epoch)
         train_loss.append(train_epoch_loss)
@@ -145,5 +145,6 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--optimizer', type=str, default='adam')
     parser.add_argument('-s', '--lr_sched', type=str, default='none')
     parser.add_argument('--verbose', action='store_true', default=False)
+    parser.add_argument('--thresh', type=float, default=0.5)
     args = parser.parse_args()
     main(args)
