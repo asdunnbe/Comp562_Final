@@ -69,15 +69,19 @@ def test(model, dataloader, device):
     model.eval()
     y_true = []
     y_pred = []
+    #print(type(y_pred))
+
     with torch.no_grad():
         for i, batch in tqdm(enumerate(dataloader)):
             data, y_t = batch
-            for l in y_t: y_true.append(l.tolist())
+            for l in y_t:
+                y_true.append(l.tolist())
             y_p = model(data.to(device))
             for l in y_p: 
                 l = torch.sigmoid(l)
                 y_pred.append(l.tolist())
-            y_pred = model(data)
+                #print("After", type(y_pred))
+            #y_pred = model(data)
 
     f1 = f1_score(y_true, y_pred, zero_division=1, average=None)
     auc = roc_auc_score(y_true, y_pred, average=None)

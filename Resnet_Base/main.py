@@ -39,22 +39,22 @@ def main(args):
     train_data = ImageDataset(csv=train_csv, train=True, test=False, rootDir=train_img, transform=transform_train)
     val_data = ImageDataset(csv=train_csv, train=False, test=False, rootDir=train_img, transform=transform_test)
     #test_data = ImageDataset(csv=test_csv, train=False, test=False, rootDir=test_img, transform=None)
-    test_data = ImageDataset(csv=test_csv, train=False, test=True, rootDir=test_img, transform=None)
+    test_data = ImageDataset(csv=test_csv, train=False, test=True, rootDir=test_img, transform=transform_test)
 
     # data loaders
     batch_size = args.batch_size
 
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=8)
     val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False, num_workers=8)
-    test_loader = DataLoader(test_data, batch_size=len(test_data), shuffle=False, num_workers=8)
-
+    #test_loader = DataLoader(test_data, batch_size=len(test_data), shuffle=False, num_workers=8)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=8)
     # ------ MODEL
 
     print('==> Building model..')
 
     # Check for GPU
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+    print(device)
     # intialize the model
     model = ResNet50(pretrained=args.pretrn).to(device)
 

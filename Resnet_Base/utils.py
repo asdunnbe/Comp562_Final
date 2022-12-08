@@ -38,8 +38,11 @@ class ImageDataset(torch.utils.data.Dataset):
         self.all_labels = parse_csv_labels(self.df)         # Second column is the labels, parsed and in tensor
         self.transform = transform                      # set transformer
 
-        self.train_ratio = int(0.875 * len(self.csv))
-        self.valid_ratio = len(self.csv) - self.train_ratio
+        self.train_ratio = int(0.875 * len(self.df))
+        #self.train_ratio = int(0.875 * len(self.csv))
+
+        #self.valid_ratio = len(self.csv) - self.train_ratio
+        self.valid_ratio = len(self.df) - self.train_ratio
 
         # set the training data images and labels
         if self.train == True:
