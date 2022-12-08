@@ -4,11 +4,11 @@ import numpy as np
 import random
 
 # directory
-metadata_train = "/Users/Andrea/Chest_XRay/Data_train_sing.csv"
-metadata_test = "/Users/Andrea/Chest_XRay/Data_test_sing.csv"
+metadata_train = "Users/User/Github Repositeries/Comp562_Final/Chest_XRay/Data_train_sing.csv"
+metadata_test = "Users/User/Github Repositeries/Comp562_Final/Chest_XRay/Data_test_sing.csv"
 
-test_csv = "/Users/Andrea/Chest_XRay/Data_test_bal.csv"
-train_csv = "/Users/Andrea/Chest_XRay/Data_train_bal.csv"
+test_csv = "Users/User/Github Repositeries/Comp562_Final/Chest_XRay/Data_test_bal.csv"
+train_csv = "Users/User/Github Repositeries/Comp562_Final/Chest_XRay/Data_train_bal.csv"
 
 metadata = [metadata_train, metadata_test]
 save_csv = [train_csv, test_csv]

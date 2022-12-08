@@ -2,9 +2,9 @@ import os
 import shutil
 
 # directories
-source_folder = "/Users/Andrea/Chest_XRay/"
-train_folder = "/Users/Andrea/Chest_XRay/img_train"
-test_folder = "/Users/Andrea/Chest_XRay/img_test"
+source_folder = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/"
+train_folder = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/img_train"
+test_folder = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/img_test"
 
 
 # test images

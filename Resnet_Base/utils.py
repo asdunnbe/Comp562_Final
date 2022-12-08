@@ -33,7 +33,8 @@ class ImageDataset(torch.utils.data.Dataset):
         self.test = test
         self.rootDir = rootDir
         self.df = pd.read_csv(csv)
-        self.all_image_names =  np.array(self.csv[:]['Image Index'])  # First column contains the image paths
+        self.all_image_names =  np.array(self.df[:]['Image Index'])
+     #   self.all_image_names =  np.array(self.csv[:]['Image Index'])  # First column contains the image paths
         self.all_labels = parse_csv_labels(self.df)         # Second column is the labels, parsed and in tensor
         self.transform = transform                      # set transformer
 

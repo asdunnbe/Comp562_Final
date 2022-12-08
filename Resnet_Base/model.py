@@ -66,7 +66,7 @@ def val(model, dataloader, criterion, val_data, device):
 
 def test(model, dataloader, device):
     print('Testing')
-    model.val()
+    model.eval()
     y_true = []
     y_pred = []
     with torch.no_grad():

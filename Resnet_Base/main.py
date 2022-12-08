@@ -11,12 +11,12 @@ from utils import ImageDataset
 from model import ResNet50, train, val, test
 
 # Paths
-source_folder = "/data/Chest_XRay/"
-train_img = "/data/Chest_XRay/img_train/"
-test_img = "/data/Chest_XRay/img_test/"
-test_csv = "/data/Chest_XRay/Data_test_sing.csv"       # balenced or unbalenced(sing)
-train_csv = "/data/Chest_XRay/Data_train_sing.csv"     # balenced or unbalenced(sing)
-save_results_location = "/home/tasos/ad122/base_lines/"
+source_folder = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/"
+train_img = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/img_train/"
+test_img = "/Users/User/Github Repositeries/Comp562_Final/Chest_XRay/img_test/"
+test_csv = "/Users/User/Github Repositeries/Comp562_Final/data organization/Data_test_sing.csv"       # balenced or unbalenced(sing)
+train_csv = "/Users/User/Github Repositeries/Comp562_Final/data organization//Data_train_sing.csv"     # balenced or unbalenced(sing)
+save_results_location = "/Users/User/Github Repositeries/Comp562_Final/results"
 
 def main(args):
     # ------ DATA
@@ -37,8 +37,9 @@ def main(args):
 
     # Form Customs Datasets
     train_data = ImageDataset(csv=train_csv, train=True, test=False, rootDir=train_img, transform=transform_train)
-    val_data = ImageDataset(csv=train_csv, train=False, test=False, rootDir=test_img, transform=transform_test)
-    test_data = ImageDataset(csv=test_csv, train=False, test=False, rootDir=test_img, transform=None)
+    val_data = ImageDataset(csv=train_csv, train=False, test=False, rootDir=train_img, transform=transform_test)
+    #test_data = ImageDataset(csv=test_csv, train=False, test=False, rootDir=test_img, transform=None)
+    test_data = ImageDataset(csv=test_csv, train=False, test=True, rootDir=test_img, transform=None)
 
     # data loaders
     batch_size = args.batch_size
@@ -82,7 +83,7 @@ def main(args):
         print(f"Epoch {epoch+1} of {epochs}")
         train_epoch_loss = train(model, train_loader, optimizer, criterion, train_data, device)
         valid_epoch_loss = val(model, val_loader, criterion, val_data, device)
-        if args.lr_sched is not 'none': scheduler.step()
+        if args.lr_sched != 'none': scheduler.step()
         f1, auc = test(model, test_loader, device)
 
         epoch_counts.append(epoch)
