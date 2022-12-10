@@ -81,9 +81,12 @@ def test(model, dataloader, device, threshold):
                 l = torch.sigmoid(l)
                 y_pred.append(l.tolist())
 
-    for row in y_pred:
+    #for row in y_pred:
+     #   row = [int(i > threshold) for i in row]
+    for r in range(len(y_pred)):
+        row = y_pred[r]
         row = [int(i > threshold) for i in row]
-
+        y_pred[r] = row
     f1 = f1_score(y_true, y_pred, zero_division=1, average="macro")
     auc = roc_auc_score(y_true, y_pred, average='macro')
     

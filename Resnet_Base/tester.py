@@ -1,29 +1,22 @@
-# performs a hyperparameter sweep with many tests
+
 import os
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
-import pickle
-
-
-BASE_TEST_NAME = f'base_resnet50'
-
-epochs = [50]
-lrs = [0.001, 0.00001]
-batch_size = 128
+epoch = 50
+lr = 0.001
+batch_size = 64
 pretrain = False
-optimizers = ['adam']
-lr_scheds = ['cosine']
-verbose = [False]
+optimizer = 'adam'
+lr_sched = 'cosine'
+verbose = False
+thresholds = [0.4, 0.5, 0.6]
 
-results = {}
 
-for epoch in epochs:
-    for lr in lrs:
-        for optimizer in optimizers:
-            for lr_sched in lr_scheds:
-                TEST_NAME = TEST_NAME + f'_e{epoch}_lr{lr}_pF_O{optimizer}_S{lr_sched}'
+for thresh in thresholds:
+    TEST_NAME = f'chest_xray_e{epoch}_b{batch_size}_t{thresh}'
+    print("Running Expirement: ",TEST_NAME)
 
-                command = (
-                    f'python main.py --exp_name {TEST_NAME} --epochs {epoch} --lr {lr} '
-                    f'--batch_size {batch_size} --pretrn {pretrain} --optimizer {optimizer}'
-                    f'--lr_sched {lr_sched} --verbose {verbose}' )
+    command = (
+        f'python main.py --exp_name {TEST_NAME} --epochs {epoch} --batch_size {batch_size} ' 
+        f'--lr {lr} --optimizer {optimizer} --lr_sched {lr_sched}  --thresh {thresh}' )
+    os.system(command)

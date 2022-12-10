@@ -84,7 +84,7 @@ def main(args):
         train_epoch_loss = train(model, train_loader, optimizer, criterion, train_data, device)
         valid_epoch_loss = val(model, val_loader, criterion, val_data, device)
         if args.lr_sched != 'none': scheduler.step()
-        f1, auc = test(model, test_loader, device, args.threshold)
+        f1, auc = test(model, test_loader, device, args.thresh)
 
         epoch_counts.append(epoch)
         train_loss.append(train_epoch_loss)
@@ -95,7 +95,7 @@ def main(args):
         print(f'Train Loss: {train_epoch_loss:.4f}      Val Loss: {valid_epoch_loss:.4f}')
         print(f'F1:         {f1:.4f}      AUC:      {auc:.4f}')
 
-
+    print("==> Saving model..")
     # add results to csv
     header = ['epoch', 'train loss', 'valid loss', 'f1', 'auc']
     rows = zip(epoch_counts, train_loss, valid_loss, f1_list, auc_list)
@@ -122,7 +122,7 @@ def main(args):
     plt.ylabel('Loss')
     plt.legend()
     plt.savefig(save_results_location + args.exp_name +'_loss.png')
-    plt.show()
+    ##plt.show()
 
     # plot and save the train and validation line graphs
     plt.figure(figsize=(10, 7))
@@ -132,7 +132,7 @@ def main(args):
     plt.ylabel('AUC and F1')
     plt.legend()
     plt.savefig(save_results_location + args.exp_name +'_testing.png')
-    plt.show()
+    ##plt.show()
 
 
 if __name__ == '__main__':
